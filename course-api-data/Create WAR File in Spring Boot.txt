@@ -1,0 +1,51 @@
+This is just a three step simple procedure to package your application into war.
+
+1. Extending Main Class
+--------------------
+First, we extend our main class to SpringBootServletInitializer. This tells spring that your main class will be the entry point to initialize your project in server.
+
+@SpringBootApplication
+public class Application extends SpringBootServletInitializer{
+ 
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+
+2. Overriding configure method
+==============================
+Next, we overload the configure method of SpringBootServletInitializer. We tell spring to build the sources from our Main class. Your final Main class should look like this:
+
+@SpringBootApplication
+public class Application extends SpringBootServletInitializer{
+ 
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+ 
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(Application.class);
+    }
+}
+
+
+3. Configure Packaging to WAR
+=============================
+
+
+Finally, we tell maven to package the project in to WAR. In your pom.xml, change the attribute value for packaging from jar to war
+
+<packaging>war</packaging>
+
+Ensure that the embedded servlet container doesn’t interfere with the servlet container to which the war file will be deployed. To do so, you need to mark the embedded servlet container dependency as provided.
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-tomcat</artifactId>
+    <scope>provided</scope>
+</dependency>
+    
+
+Reference: 
+http://javasampleapproach.com/spring-framework/spring-boot/deploy-spring-boot-web-app-war-file-tomcat-server-maven-build
